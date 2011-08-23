@@ -1,17 +1,27 @@
 package ru.frostman.kindle.kindlepush.ui;
 
+import ru.frostman.kindle.kindlepush.config.KindlePushConfig;
+import ru.frostman.kindle.kindlepush.ui.handler.HideComponentHandler;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * @author slukjanov aka Frostman
  */
 public class SettingsWindow extends JFrame {
+    private JPanel panel;
+    private JTabbedPane tabbedPane;
+    private JTextField kindleMail;
+    private JTextField testProperty;
 
     public SettingsWindow() throws HeadlessException {
         setTitle("KindlePush :: Settings");
         setName("SettingsWindow");
+        setContentPane(panel);
+        setResizable(false);
 
         int width = 500, height = 500;
 
@@ -21,35 +31,71 @@ public class SettingsWindow extends JFrame {
         setResizable(false);
         setBounds(screenSize.width / 2 - width / 2, screenSize.height / 2 - height / 2, width, height);
 
-        JTabbedPane tabbedPane = new JTabbedPane();
-
-        JComponent panel1 = makeTextPanel("Application settings");
-        tabbedPane.addTab("App", null, panel1, "KindlePush settings");
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_A);
-
-        JComponent panel2 = makeTextPanel("Kindle settings");
-        tabbedPane.addTab("Kindle", null, panel2, "Kindle delivering settings");
-        tabbedPane.setMnemonicAt(1, KeyEvent.VK_K);
-
-        JComponent panel3 = makeTextPanel("Mail settings");
-        tabbedPane.addTab("Mail", null, panel3, "Mail settings");
-        tabbedPane.setMnemonicAt(2, KeyEvent.VK_M);
-
-        JComponent panel4 = makeTextPanel("Dropbox settings");
-        tabbedPane.addTab("Dropbox", null, panel4, "Dropbox settings");
-        tabbedPane.setMnemonicAt(3, KeyEvent.VK_D);
-
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        getContentPane().add(tabbedPane);
+
+        HideComponentHandler.apply(tabbedPane, new Runnable() {
+            public void run() {
+                doHide();
+            }
+        });
+
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent event) {
+                doShow();
+            }
+
+            @Override
+            public void windowClosing(WindowEvent event) {
+                doHide();
+            }
+        });
+
+        tabbedPane.setSelectedIndex(1);
+
+        pack();
     }
 
-    protected JComponent makeTextPanel(String text) {
-        JPanel panel = new JPanel(false);
-        JLabel filler = new JLabel(text);
-        filler.setHorizontalAlignment(JLabel.CENTER);
-        panel.setLayout(new GridLayout(1, 1));
-        panel.add(filler);
+    public void doShow() {
+        setData(KindlePushConfig.get());
+        setVisible(true);
+    }
 
-        return panel;
+    public void doHide() {
+        if (!isModified(KindlePushConfig.get())) {
+            setVisible(false);
+            return;
+        }
+
+        int confirmed = JOptionPane.showConfirmDialog(this,
+                "Save changes?", "KindlePush :: Settings",
+                JOptionPane.YES_NO_CANCEL_OPTION);
+
+        if (JOptionPane.YES_OPTION == confirmed) {
+            KindlePushConfig config = KindlePushConfig.get();
+            getData(config);
+            KindlePushConfig.save();
+
+            setVisible(false);
+        } else if (JOptionPane.NO_OPTION == confirmed) {
+            setVisible(false);
+        } else {
+            // no operations
+        }
+    }
+
+    public void setData(KindlePushConfig data) {
+        kindleMail.setText(data.getKindleMail());
+    }
+
+    public void getData(KindlePushConfig data) {
+        data.setKindleMail(kindleMail.getText());
+    }
+
+    public boolean isModified(KindlePushConfig data) {
+        if (kindleMail.getText() != null ? !kindleMail.getText().equals(data.getKindleMail()) : data.getKindleMail() != null)
+            return true;
+        return false;
     }
 }

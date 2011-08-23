@@ -3,18 +3,26 @@ package ru.frostman.kindle.kindlepush.ui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Closeable;
 import java.net.URL;
 
 /**
  * @author slukjanov aka Frostman
  */
-public class TraySupport {
+public class TraySupport implements Closeable {
     private static final String AC_ABOUT = "about";
     private static final String AC_SETTINGS = "settings";
     private static final String AC_EXIT = "exit";
 
     private final PushWindow pushWindow = new PushWindow();
     private final SettingsWindow settingsWindow = new SettingsWindow();
+    private final AboutWindow aboutWindow = new AboutWindow();
+
+    private TrayIcon trayIcon;
+
+    public TraySupport() {
+        CloseSupport.add(this);
+    }
 
     public boolean buildTrayIcon() {
         //Check the SystemTray is supported
@@ -24,15 +32,19 @@ public class TraySupport {
             return false;
         }
 
-        final TrayIcon trayIcon = new TrayIcon(createImage("/bulb.gif", "tray icon"));
+        trayIcon = new TrayIcon(createImage("/bulb.gif", "tray icon"));
         trayIcon.setImageAutoSize(true);
         trayIcon.setToolTip("KindlePush");
         trayIcon.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent event) {
-                if (event.getButton() == MouseEvent.BUTTON1) {
-                    pushWindow.setVisible(!pushWindow.isVisible());
-                }
+            public void mouseClicked(final MouseEvent event) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        if (event.getButton() == MouseEvent.BUTTON1) {
+                            pushWindow.setVisible(!pushWindow.isVisible());
+                        }
+                    }
+                });
             }
         });
 
@@ -46,6 +58,9 @@ public class TraySupport {
 
             return false;
         }
+
+        //todo remove
+        trayIcon.displayMessage("KindlePush", "Loaded and ready to work!", TrayIcon.MessageType.INFO);
 
         return true;
     }
@@ -71,26 +86,31 @@ public class TraySupport {
         popupMenu.add(exitItem);
 
         popupMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                String actionCommand = event.getActionCommand();
+            public void actionPerformed(final ActionEvent event) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        String actionCommand = event.getActionCommand();
 
-                if (AC_ABOUT.equals(actionCommand)) {
-
-                } else if (AC_SETTINGS.equals(actionCommand)) {
-                    settingsWindow.setVisible(true);
-                } else if (AC_EXIT.equals(actionCommand)) {
-                    //todo release all resources
-                    pushWindow.dispose();
-                    settingsWindow.dispose();
-                    System.exit(0);
-                }
+                        if (AC_ABOUT.equals(actionCommand)) {
+                            aboutWindow.setVisible(!aboutWindow.isVisible());
+                        } else if (AC_SETTINGS.equals(actionCommand)) {
+                            if (settingsWindow.isVisible()) {
+                                settingsWindow.doHide();
+                            } else {
+                                settingsWindow.doShow();
+                            }
+                        } else if (AC_EXIT.equals(actionCommand)) {
+                            CloseSupport.close();
+                        }
+                    }
+                });
             }
         });
 
         trayIcon.setPopupMenu(popupMenu);
     }
 
-    private static Image createImage(String path, String description) {
+    private Image createImage(String path, String description) {
         URL imageURL = TraySupport.class.getResource(path);
 
         if (imageURL == null) {
@@ -101,6 +121,24 @@ public class TraySupport {
             return null;
         } else {
             return (new ImageIcon(imageURL, description)).getImage();
+        }
+    }
+
+    public void close() {
+        if (trayIcon != null) {
+            SystemTray.getSystemTray().remove(trayIcon);
+        }
+
+        if (pushWindow != null) {
+            pushWindow.dispose();
+        }
+
+        if (settingsWindow != null) {
+            settingsWindow.dispose();
+        }
+
+        if (aboutWindow != null) {
+            aboutWindow.dispose();
         }
     }
 
