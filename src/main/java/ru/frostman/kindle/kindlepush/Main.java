@@ -1,15 +1,16 @@
 package ru.frostman.kindle.kindlepush;
 
-import ru.frostman.kindle.kindlepush.ui.TraySupport;
+import ru.frostman.kindle.kindlepush.ui.LaF;
+
+import javax.swing.*;
 
 /**
  * @author slukjanov aka Frostman
  */
 public class Main {
     public static void main(String[] args) {
-        TraySupport traySupport = new TraySupport();
-        if (!traySupport.buildTrayIcon()) {
-            //todo create normal app
-        }
+        LaF.applyLaF();
+
+        SwingUtilities.invokeLater(new KindlePush());
     }
 }

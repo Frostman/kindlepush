@@ -1,8 +1,8 @@
 package ru.frostman.kindle.kindlepush.ui;
 
 import com.sun.awt.AWTUtilities;
-import ru.frostman.kindle.kindlepush.ui.handler.DataDropHandler;
 import ru.frostman.kindle.kindlepush.ui.handler.ContainerMoveHandler;
+import ru.frostman.kindle.kindlepush.ui.handler.DataDropHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public class PushWindow extends JWindow {
     public PushWindow() throws HeadlessException {
         int shiftX = 0, shiftY = 40, width = 100, height = 100;
 
-        setName("KindlePush:PushWindow");
+        setName("PushWindow");
         setAlwaysOnTop(true);
 //        setLocationByPlatform(true);
         Toolkit toolkit = getToolkit();
