@@ -32,7 +32,7 @@ public class TraySupport implements Closeable {
             return false;
         }
 
-        trayIcon = new TrayIcon(createImage("/bulb.gif", "tray icon"));
+        trayIcon = new TrayIcon(createImage("/trayIcon.gif", "tray icon"));
         trayIcon.setImageAutoSize(true);
         trayIcon.setToolTip("KindlePush");
         trayIcon.addMouseListener(new MouseAdapter() {
@@ -63,6 +63,12 @@ public class TraySupport implements Closeable {
         trayIcon.displayMessage("KindlePush", "Loaded and ready to work!", TrayIcon.MessageType.INFO);
 
         return true;
+    }
+
+    public void showMessage(String caption, String text, TrayIcon.MessageType messageType) {
+        if (trayIcon != null) {
+            trayIcon.displayMessage(caption, text, messageType);
+        }
     }
 
     private void buildPopupMenu(TrayIcon trayIcon) {

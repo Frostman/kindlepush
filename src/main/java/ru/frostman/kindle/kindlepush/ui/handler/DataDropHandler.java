@@ -1,5 +1,7 @@
 package ru.frostman.kindle.kindlepush.ui.handler;
 
+import ru.frostman.kindle.kindlepush.push.Pusher;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -49,7 +51,7 @@ public class DataDropHandler extends TransferHandler {
             try {
                 if (flavor.equals(DataFlavor.javaFileListFlavor)) {
                     List transferDataList = (List) transferable.getTransferData(DataFlavor.javaFileListFlavor);
-                    List<File> files = new LinkedList<File>();
+                    final List<File> files = new LinkedList<File>();
                     for (Object transferData : transferDataList) {
                         if (transferData instanceof File) {
                             File file = (File) transferData;
@@ -57,7 +59,7 @@ public class DataDropHandler extends TransferHandler {
                         }
                     }
 
-                    //todo compute files
+                    Pusher.get().push(files);
 
                     return true;
                 } else if (flavor.equals(DataFlavor.stringFlavor)) {
