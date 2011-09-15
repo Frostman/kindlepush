@@ -1,10 +1,9 @@
 package ru.frostman.kindle.kindlepush.push;
 
 import ru.frostman.kindle.kindlepush.KindlePush;
-import ru.frostman.kindle.kindlepush.config.KindlePushConfig;
 import ru.frostman.kindle.kindlepush.util.Mail;
 
-import java.awt.*;
+import javax.swing.*;
 import java.io.File;
 import java.util.HashSet;
 import java.util.List;
@@ -56,7 +55,7 @@ public class KindlePusher {
             if (extDotIdx > -1) {
                 String ext = name.substring(extDotIdx).toLowerCase();
                 if (SUPPORTED_EXT.contains(ext)) {
-                    push(file);
+                    push(file, CAN_CONVERT_EXT.contains(ext));
                 } else {
                     // todo process unsupported ext
                     System.out.println("unsupported ext: " + file.getAbsolutePath());
@@ -68,14 +67,37 @@ public class KindlePusher {
         }
     }
 
-    private static void push(File file) {
-        //todo show option dialog
+    private static void push(final File file, boolean canConvert) {
+        boolean convert = canConvert;
+        if (convert) {
+            int confirmed = JOptionPane.showConfirmDialog(null,
+                    "Do you want to use Amazon's converter?\nFile: " + file.getName(), "KindlePush :: Send to Kindle",
+                    JOptionPane.YES_NO_CANCEL_OPTION);
 
-        System.out.println("before send");
-        Mail.send(KindlePushConfig.get().getKindleMail(), file, true);
-        System.out.println("successfully sent: " + file.getAbsolutePath());
+            if (JOptionPane.YES_OPTION == confirmed) {
+                convert = true;
+            } else if (JOptionPane.NO_OPTION == confirmed) {
+                convert = false;
+            } else {
+                return;
+            }
+        } else {
+            int confirmed = JOptionPane.showConfirmDialog(null,
+                    "Send file to your Kindle?\nFile: " + file.getName(), "KindlePush :: Send to Kindle",
+                    JOptionPane.YES_NO_CANCEL_OPTION);
 
-        KindlePush.getTraySupport().showMessage("KindlePush", "Sent to Kindle: " + file.getAbsolutePath(), TrayIcon.MessageType.INFO);
+            if (JOptionPane.NO_OPTION == confirmed) {
+                return;
+            }
+        }
+
+        final boolean finalConvert = convert;
+        KindlePush.execute(new Runnable() {
+            @Override
+            public void run() {
+                Mail.send(file, finalConvert);
+            }
+        });
     }
 
 }

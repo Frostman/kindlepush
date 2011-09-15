@@ -20,13 +20,15 @@
         <children>
           <grid id="b0ab8" layout-manager="FormLayout">
             <rowspec value="center:d:noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
             <colspec value="fill:10px:noGrow"/>
             <colspec value="fill:100px:noGrow"/>
             <colspec value="fill:10px:noGrow"/>
             <colspec value="fill:150px:noGrow"/>
             <colspec value="fill:10px:noGrow"/>
             <constraints>
-              <tabbedpane title="App" enabled="false"/>
+              <tabbedpane title="App"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -37,7 +39,7 @@
                   <forms defaultalign-horz="false"/>
                 </constraints>
                 <properties>
-                  <text value="Test property"/>
+                  <text value="Google mail login"/>
                 </properties>
               </component>
               <hspacer id="1270d">
@@ -52,7 +54,7 @@
                   <forms defaultalign-horz="false"/>
                 </constraints>
               </hspacer>
-              <component id="cc766" class="javax.swing.JTextField" binding="testProperty">
+              <component id="cc766" class="javax.swing.JTextField" binding="mailLogin">
                 <constraints>
                   <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -67,6 +69,24 @@
                   <forms defaultalign-horz="false"/>
                 </constraints>
               </hspacer>
+              <component id="298ef" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties>
+                  <text value="Mail password"/>
+                </properties>
+              </component>
+              <component id="fe266" class="javax.swing.JPasswordField" binding="mailPassword">
+                <constraints>
+                  <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                  <forms defaultalign-horz="false"/>
+                </constraints>
+                <properties/>
+              </component>
             </children>
           </grid>
           <grid id="5fd18" layout-manager="FormLayout">

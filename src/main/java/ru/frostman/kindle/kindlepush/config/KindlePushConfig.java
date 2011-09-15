@@ -93,10 +93,28 @@ public class KindlePushConfig {
         return currentConfig;
     }
 
+    private String fromMailLogin = "";
+    private String fromMailPassword = "";
+    private String kindleMail = "";
+
     public KindlePushConfig() {
     }
 
-    private String kindleMail = "";
+    public String getFromMailLogin() {
+        return fromMailLogin;
+    }
+
+    public void setFromMailLogin(String fromMailLogin) {
+        this.fromMailLogin = fromMailLogin;
+    }
+
+    public String getFromMailPassword() {
+        return fromMailPassword;
+    }
+
+    public void setFromMailPassword(String fromMailPassword) {
+        this.fromMailPassword = fromMailPassword;
+    }
 
     public String getKindleMail() {
         return kindleMail;

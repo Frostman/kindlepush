@@ -16,7 +16,7 @@ public class LaF {
 
     public static void applyLaF() {
         for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(info.getName())) {
+            if (LAF_LIST.contains(info.getName())) {
                 try {
                     UIManager.setLookAndFeel(info.getClassName());
                 } catch (Exception e) {

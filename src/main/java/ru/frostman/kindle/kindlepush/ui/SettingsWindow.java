@@ -15,7 +15,8 @@ public class SettingsWindow extends JFrame {
     private JPanel panel;
     private JTabbedPane tabbedPane;
     private JTextField kindleMail;
-    private JTextField testProperty;
+    private JTextField mailLogin;
+    private JPasswordField mailPassword;
 
     public SettingsWindow() throws HeadlessException {
         setTitle("KindlePush :: Settings");
@@ -52,7 +53,7 @@ public class SettingsWindow extends JFrame {
             }
         });
 
-        tabbedPane.setSelectedIndex(1);
+        tabbedPane.setSelectedIndex(0);
 
         pack();
     }
@@ -86,14 +87,22 @@ public class SettingsWindow extends JFrame {
     }
 
     public void setData(KindlePushConfig data) {
+        mailLogin.setText(data.getFromMailLogin());
+        mailPassword.setText(data.getFromMailPassword());
         kindleMail.setText(data.getKindleMail());
     }
 
     public void getData(KindlePushConfig data) {
+        data.setFromMailLogin(mailLogin.getText());
+        data.setFromMailPassword(mailPassword.getText());
         data.setKindleMail(kindleMail.getText());
     }
 
     public boolean isModified(KindlePushConfig data) {
+        if (mailLogin.getText() != null ? !mailLogin.getText().equals(data.getFromMailLogin()) : data.getFromMailLogin() != null)
+            return true;
+        if (mailPassword.getText() != null ? !mailPassword.getText().equals(data.getFromMailPassword()) : data.getFromMailPassword() != null)
+            return true;
         if (kindleMail.getText() != null ? !kindleMail.getText().equals(data.getKindleMail()) : data.getKindleMail() != null)
             return true;
         return false;
