@@ -57,12 +57,16 @@ public class KindlePusher {
                 if (SUPPORTED_EXT.contains(ext)) {
                     push(file, CAN_CONVERT_EXT.contains(ext));
                 } else {
-                    // todo process unsupported ext
-                    System.out.println("unsupported ext: " + file.getAbsolutePath());
+                    JOptionPane.showMessageDialog(null,
+                            "Unsupported file format (resolved by extension)\nFile: " + file.getName(),
+                            "KindlePush :: Unsupported format",
+                            JOptionPane.OK_OPTION);
                 }
             } else {
-                // todo process unknown ext
-                System.out.println("unknown ext: " + file.getAbsolutePath());
+                JOptionPane.showMessageDialog(null,
+                        "Unknown file format (can't resolved by extension)\nFile: " + file.getName(),
+                        "KindlePush :: Unknown format",
+                        JOptionPane.OK_OPTION);
             }
         }
     }
@@ -84,7 +88,7 @@ public class KindlePusher {
         } else {
             int confirmed = JOptionPane.showConfirmDialog(null,
                     "Send file to your Kindle?\nFile: " + file.getName(), "KindlePush :: Send to Kindle",
-                    JOptionPane.YES_NO_CANCEL_OPTION);
+                    JOptionPane.YES_NO_OPTION);
 
             if (JOptionPane.NO_OPTION == confirmed) {
                 return;

@@ -51,18 +51,21 @@ public class PushWindow extends JWindow {
                 }
             });
         } catch (TooManyListenersException e) {
-            //todo remove
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "Exception:" + e.getMessage(),
+                    "KindlePush :: Error",
+                    JOptionPane.OK_OPTION);
             throw new RuntimeException();
         }
 
-        //todo notify that only for 6u10+
         try {
             AWTUtilities.setWindowOpacity(this, 0.75f);
             AWTUtilities.setWindowShape(this, new RoundRectangle2D.Float(0, 0, width, height, 25, 25));
         } catch (Exception e) {
-            //todo remove
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "Can't use AWTUtilities (jdk 6u10+ only)",
+                    "KindlePush :: Error",
+                    JOptionPane.OK_OPTION);
         }
     }
 

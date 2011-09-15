@@ -20,8 +20,6 @@ public class LaF {
                 try {
                     UIManager.setLookAndFeel(info.getClassName());
                 } catch (Exception e) {
-                    //todo remove
-                    e.printStackTrace();
                     continue;
                 }
                 break;

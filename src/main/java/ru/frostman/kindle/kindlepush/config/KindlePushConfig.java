@@ -6,6 +6,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,7 +32,10 @@ public class KindlePushConfig {
 
         if (!appDir.isDirectory()) {
             if (!appDir.mkdirs()) {
-                //todo show error
+                JOptionPane.showMessageDialog(null,
+                        "Error while creating dirs: " + appDir.getAbsolutePath(),
+                        "KindlePush :: Error",
+                        JOptionPane.OK_OPTION);
             }
         }
 
@@ -39,22 +43,33 @@ public class KindlePushConfig {
         if (!configFile.exists()) {
             try {
                 if (!configFile.createNewFile()) {
-                    //todo show error
+                    JOptionPane.showMessageDialog(null,
+                            "Can't create config file: " + configFile.getAbsolutePath(),
+                            "KindlePush :: Error",
+                            JOptionPane.OK_OPTION);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-                //todo show error
+                JOptionPane.showMessageDialog(null,
+                        "Can't create config file: " + configFile.getAbsolutePath(),
+                        "KindlePush :: Error",
+                        JOptionPane.OK_OPTION);
             }
 
             if (!save()) {
-                //todo exception
+                JOptionPane.showMessageDialog(null,
+                        "Can't save config file: " + configFile.getAbsolutePath(),
+                        "KindlePush :: Error",
+                        JOptionPane.OK_OPTION);
             }
             newConfig = true;
         }
 
         if (!newConfig) {
             if (!load()) {
-                //todo exception
+                JOptionPane.showMessageDialog(null,
+                        "Can't load config file: " + configFile.getAbsolutePath(),
+                        "KindlePush :: Error",
+                        JOptionPane.OK_OPTION);
             }
         }
     }
@@ -72,17 +87,23 @@ public class KindlePushConfig {
 
             return changed;
         } catch (Exception e) {
-            //todo remove
-            throw new RuntimeException("Can't load framework configuration", e);
+            JOptionPane.showMessageDialog(null,
+                    "Can't load config file: " + configFile.getAbsolutePath() + ";" + e.getMessage(),
+                    "KindlePush :: Error",
+                    JOptionPane.OK_OPTION);
         }
+
+        return false;
     }
 
     public synchronized static boolean save() {
         try {
             yaml.dump(currentConfig, new PrintWriter(configFile));
         } catch (Exception e) {
-            //todo remove
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "Can't save config file: " + configFile.getAbsolutePath(),
+                    "KindlePush :: Error",
+                    JOptionPane.OK_OPTION);
             return false;
         }
 

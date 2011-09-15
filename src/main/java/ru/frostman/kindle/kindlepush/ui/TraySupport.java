@@ -27,8 +27,10 @@ public class TraySupport implements Closeable {
     public boolean buildTrayIcon() {
         //Check the SystemTray is supported
         if (!SystemTray.isSupported()) {
-            //todo replace with notification to contact me@frostman.ru
-            System.out.println("SystemTray is not supported");
+            JOptionPane.showMessageDialog(null,
+                    "SystemTray isn't supported\nPlease, contact me@frostman.ru",
+                    "KindlePush :: Error",
+                    JOptionPane.OK_OPTION);
             return false;
         }
 
@@ -53,13 +55,14 @@ public class TraySupport implements Closeable {
         try {
             SystemTray.getSystemTray().add(trayIcon);
         } catch (AWTException e) {
-            //todo remove
-            System.out.println("TrayIcon could not be added.");
+            JOptionPane.showMessageDialog(null,
+                    "TrayIcon couldn't be added",
+                    "KindlePush :: Error",
+                    JOptionPane.OK_OPTION);
 
             return false;
         }
 
-        //todo remove
         trayIcon.displayMessage("KindlePush", "Loaded and ready to work!", TrayIcon.MessageType.INFO);
 
         return true;
@@ -120,10 +123,6 @@ public class TraySupport implements Closeable {
         URL imageURL = TraySupport.class.getResource(path);
 
         if (imageURL == null) {
-
-            //todo remove
-            System.err.println("Resource not found: " + path);
-
             return null;
         } else {
             return (new ImageIcon(imageURL, description)).getImage();

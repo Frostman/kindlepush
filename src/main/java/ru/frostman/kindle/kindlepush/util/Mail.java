@@ -9,6 +9,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.Properties;
@@ -47,8 +48,10 @@ public class Mail {
             getTraySupport().showMessage("KindlePush", "Successfully sent to Kindle: " + file.getAbsolutePath(),
                     TrayIcon.MessageType.INFO);
         } catch (Exception e) {
-            //todo remove
-            throw new RuntimeException(e);
+            JOptionPane.showMessageDialog(null,
+                    "Can't send mail: " + e.getMessage(),
+                    "KindlePush :: Error",
+                    JOptionPane.OK_OPTION);
         }
     }
 
